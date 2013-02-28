@@ -18,6 +18,8 @@
 #define kSyncAutomatically  NO //TODO: Create methods to sync automatically after context save
 #define kAutoSyncDelay 30
 
+NSString *const kFTASyncDidSync = @"FTASyncDidSync";
+
 @interface FTASyncHandler ()
 
 @property (strong, nonatomic) FTAParseSync *remoteInterface;
@@ -409,12 +411,13 @@
         [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:@"FTASyncLastSyncDate"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"FTASyncDidSync" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFTASyncDidSync object:nil];
         });
         
         if (completion)
             completion();
         
+		self.initialSync = NO;
         self.syncInProgress = NO;
         self.progressBlock = nil;
         self.progress = 0;
@@ -558,6 +561,8 @@
         else if (completion && didFail)
             completion(NO, nil);
         
+		// TODO: Perhaps change `initialSync` value based on failure
+		self.initialSync = YES;
         self.syncInProgress = NO;
         self.progressBlock = nil;
         self.progress = 0;

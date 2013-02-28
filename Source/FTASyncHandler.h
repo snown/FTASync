@@ -18,11 +18,13 @@ typedef void (^FTASyncProgressBlock)(float progress, NSString* message);
 typedef void (^FTACompletionBlock)(void);
 typedef void (^FTABoolCompletionBlock)(BOOL success, NSError* error);
 
+UIKIT_EXTERN NSString *const kFTASyncDidSync;
 
 @interface FTASyncHandler : NSObject {
     
 }
 
+@property (nonatomic, assign, getter = isInitialSync) BOOL initialSync;
 @property (atomic, getter = isSyncInProgress) BOOL syncInProgress;
 @property (nonatomic, getter = isIgnoreContextSave) BOOL ignoreContextSave;
 
