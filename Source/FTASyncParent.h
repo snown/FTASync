@@ -14,6 +14,7 @@
 
 #import "_FTASyncParent.h"
 #import <Parse/Parse.h>
+#import "FTAGeoPoint.h"
 
 @interface FTASyncParent : _FTASyncParent {}
 
@@ -34,5 +35,11 @@
 + (void)FTA_newObjectsForClass:(NSEntityDescription *)entityDesc withRemoteObjects:(NSArray *)parseObjects;
 + (void)FTA_updateObjectsForClass:(NSEntityDescription *)entityDesc withRemoteObjects:(NSArray *)parseObjects;
 + (void)FTA_deleteObjectsForClass:(NSEntityDescription *)entityDesc withRemoteObjects:(NSArray *)parseObjects;
+
+// Sync Options
+- (BOOL)usePFRelationForRelationship:(NSRelationshipDescription *)relationship;
+- (NSDictionary *)attributesForParseSync;
+- (NSDictionary *)relationshipsForParseSync;
+- (BOOL)shouldSync;
 
 @end

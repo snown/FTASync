@@ -10,6 +10,13 @@
 
 @implementation FTAGeoPoint
 
-// Custom logic goes here.
+- (PFGeoPoint *)pfGeoPoint {
+	return [PFGeoPoint geoPointWithLatitude:self.latitudeValue longitude:self.longitudeValue];
+}
+
+- (void)updateWithPFGeoPoint:(PFGeoPoint *)geoPoint {
+	self.latitudeValue = geoPoint.latitude;
+	self.longitudeValue = geoPoint.longitude;
+}
 
 @end

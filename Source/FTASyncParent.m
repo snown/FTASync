@@ -227,7 +227,7 @@
                                               inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     FSLog(@"Local changes: %@", localChanges);
     
-    if (self.syncStatusValue == 2 || self.syncStatusValue == 3) {
+    if (/*self.syncStatusValue == 2 || */self.syncStatusValue == 3) {
         FSLog(@"Parent object is new");
         return NO;
     }
@@ -272,6 +272,23 @@
     }
     
     return YES;
+}
+
+- (BOOL)usePFRelationForRelationship:(NSRelationshipDescription *)relationship {
+	// TODO: change this to default to YES, or in a sub-class use some heuristic to determine the response
+	return NO;
+}
+
+- (NSDictionary *)attributesForParseSync {
+	return [self.entity attributesByName];
+}
+
+- (NSDictionary *)relationshipsForParseSync {
+	return [self.entity relationshipsByName];
+}
+
+- (BOOL)shouldSync {
+	return YES;
 }
 
 #pragma mark - Ancestry
@@ -330,8 +347,8 @@
 }
 
 - (void)updateRemoteObject:(PFObject *)parseObject {
-    NSDictionary *attributes = [[self entity] attributesByName];
-    NSDictionary *relationships = [[self entity] relationshipsByName];
+    NSDictionary *attributes = [self attributesForParseSync];
+    NSDictionary *relationships = [self relationshipsForParseSync];
     
     if (self.objectId) {
         parseObject.objectId = self.objectId;
@@ -385,7 +402,7 @@
             
             // AKB: add mechanism for using PFRelation if n:n
             // many-to-many relationship
-            if ([[relationshipDescription inverseRelationship] isToMany]) {
+            if ([self usePFRelationForRelationship:relationshipDescription] && [[relationshipDescription inverseRelationship] isToMany]) {
                 
                 PFRelation *relation = [parseObject relationforKey:relationship]; // AKB: add
                 
@@ -437,6 +454,9 @@
             if (!relatedObject) {
                 continue;
             }
+			else if ([relatedObject isKindOfClass:[FTAGeoPoint class]]) {
+				relatedRemoteObject = [(FTAGeoPoint *)relatedObject pfGeoPoint];
+			}
             else if (!relatedObject.objectId) {
                 relatedObject.fromRelationship = YES;
                 relatedRemoteObject = relatedObject.remoteObject;
@@ -453,8 +473,8 @@
 }
 
 - (void)updateObjectWithRemoteObject:(PFObject *)parseObject {
-    NSDictionary *attributes = [[self entity] attributesByName];
-    NSDictionary *relationships = [[self entity] relationshipsByName];
+    NSDictionary *attributes = [self attributesForParseSync];
+    NSDictionary *relationships = [self relationshipsForParseSync];
     
     //Set all the attributes
     if (self.syncStatusValue != 1) { //Local changes take priority
@@ -487,7 +507,7 @@
             NSMutableArray *relatedLocalObjects = [NSMutableArray arrayWithArray:[(NSSet *)value allObjects]];
             NSMutableArray *relatedRemoteObjects = nil;
             
-            if ([[relationshipDescription inverseRelationship] isToMany]) {
+            if ([self usePFRelationForRelationship:relationshipDescription] && [[relationshipDescription inverseRelationship] isToMany]) {
                 // AKB: if many-to-many use PFRelation
                 PFRelation *relation = [parseObject relationforKey:relationship];
                 PFQuery *query = [relation query];
@@ -566,6 +586,17 @@
                 }
             }
         }
+		else if ([destEntity isKindOfClass:[FTAGeoPoint class]]) {
+			PFGeoPoint *remoteGeoPoint = [parseObject objectForKey:relationship];
+			FTAGeoPoint *localGeoPoint = [self valueForKey:relationship];
+			
+			if (!remoteGeoPoint) {
+				[self setValue:nil forKey:relationship];
+				
+				if (localGeoPoint) {
+					[localGeoPoint MR_deleteEntity];
+				}
+			}
         else {
             PFObject *relatedRemoteObject = [parseObject objectForKey:relationship];
             

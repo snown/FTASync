@@ -1,5 +1,9 @@
 #import "_FTAGeoPoint.h"
+#import <Parse/Parse.h>
 
 @interface FTAGeoPoint : _FTAGeoPoint {}
-// Custom logic goes here.
+
+- (PFGeoPoint *)pfGeoPoint;
+- (void)updateWithPFGeoPoint:(PFGeoPoint *)geoPoint;
+
 @end
