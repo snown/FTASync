@@ -45,19 +45,29 @@
     return YES;
 }
 
-- (NSArray *)getObjectsOfClass:(NSString *)className updatedSince:(NSDate *)lastUpdate {
-    PFQuery *query = [PFQuery queryWithClassName:className];
+- (NSArray *)getObjectsOfClass:(NSString *)className updatedSince:(NSDate *)lastUpdate skip:(NSUInteger)skip {
+	PFQuery *query = [PFQuery queryWithClassName:className];
     query.limit = 1000;
+	query.skip = skip;
     //Cache the query in case we need one of the objects for merging later
     query.cachePolicy = kPFCachePolicyNetworkOnly;
     
-    if (lastUpdate) {
+    if (lastUpdate && ![lastUpdate isKindOfClass:[NSNull class]]) {
         [query whereKey:@"updatedAt" greaterThan:lastUpdate];
     }
     
     NSArray *returnObjects = [query findObjects];
+	if ([returnObjects count] == query.limit) {
+		NSArray *moreObjects = [self getObjectsOfClass:className updatedSince:lastUpdate skip:(skip + [returnObjects count])];
+		returnObjects = [returnObjects arrayByAddingObjectsFromArray:moreObjects];
+	}
     
     return returnObjects;
+	
+}
+
+- (NSArray *)getObjectsOfClass:(NSString *)className updatedSince:(NSDate *)lastUpdate {
+	return [self getObjectsOfClass:className updatedSince:lastUpdate skip:0];
 }
 
 - (BOOL)putUpdatedObjects:(NSArray *)updatedObjects forClass:(NSEntityDescription *)entityDesc error:(NSError **)error {
