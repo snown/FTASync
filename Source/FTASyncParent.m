@@ -183,6 +183,10 @@
     return [[self entity] name];
 }
 
++ (id)FTA_localObjectWithRemoteId:(NSString *)objectId {
+	return [self MR_findFirstByAttribute:@"objectId" withValue:objectId];
+}
+
 + (FTASyncParent *)FTA_localObjectForClass:(NSEntityDescription *)entityDesc WithRemoteId:(NSString *)objectId {
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
@@ -602,6 +606,7 @@
 					[localGeoPoint MR_deleteEntity];
 				}
 			}
+		}
         else {
             PFObject *relatedRemoteObject = [parseObject objectForKey:relationship];
             

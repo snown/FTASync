@@ -22,6 +22,7 @@
 
 + (BOOL)readOnly;
 
++ (id)FTA_localObjectWithRemoteId:(NSString *)objectId;
 + (FTASyncParent *)FTA_localObjectForClass:(NSEntityDescription *)entityDesc WithRemoteId:(NSString *)objectId;
 + (NSArray *)FTA_localObjectsForClass:(NSEntityDescription *)entityDesc WithRemoteIds:(NSArray *)objectIds;
 + (NSDate *)FTA_lastUpdateForClass:(NSEntityDescription *)entityDesc;
