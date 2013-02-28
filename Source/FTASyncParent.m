@@ -446,6 +446,14 @@
                 [parseObject setObject:objectArray forKey:relationship];
             }
         }
+		else if ([relationshipDescription.destinationEntity.name isEqualToString:[FTAGeoPoint entityName]]) {
+			PFGeoPoint *pfGeoPoint = nil;
+			if (value && [value isKindOfClass:[FTAGeoPoint class]]) {
+				pfGeoPoint = [(FTAGeoPoint *)value pfGeoPoint];
+			}
+			
+			[parseObject setObject:pfGeoPoint forKey:relationship];
+		}
         else {
             //To-one relationship
             FTASyncParent *relatedObject = (FTASyncParent *) value;
@@ -454,9 +462,6 @@
             if (!relatedObject) {
                 continue;
             }
-			else if ([relatedObject isKindOfClass:[FTAGeoPoint class]]) {
-				relatedRemoteObject = [(FTAGeoPoint *)relatedObject pfGeoPoint];
-			}
             else if (!relatedObject.objectId) {
                 relatedObject.fromRelationship = YES;
                 relatedRemoteObject = relatedObject.remoteObject;
@@ -586,7 +591,7 @@
                 }
             }
         }
-		else if ([destEntity isKindOfClass:[FTAGeoPoint class]]) {
+		else if ([destEntity.name isEqualToString:[FTAGeoPoint entityName]]) {
 			PFGeoPoint *remoteGeoPoint = [parseObject objectForKey:relationship];
 			FTAGeoPoint *localGeoPoint = [self valueForKey:relationship];
 			
