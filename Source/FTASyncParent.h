@@ -40,6 +40,6 @@
 - (BOOL)usePFRelationForRelationship:(NSRelationshipDescription *)relationship;
 - (NSDictionary *)attributesForParseSync;
 - (NSDictionary *)relationshipsForParseSync;
-- (BOOL)shouldSync;
++ (BOOL)shouldSync;
 
 @end

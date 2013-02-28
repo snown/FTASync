@@ -287,7 +287,7 @@
 	return [self.entity relationshipsByName];
 }
 
-- (BOOL)shouldSync {
++ (BOOL)shouldSync {
 	return YES;
 }
 
@@ -302,7 +302,7 @@
     for (NSEntityDescription *obj in children) {
         Class myClass = NSClassFromString([obj managedObjectClassName]);
         
-        if (![PFUser currentUser] && ![myClass readOnly])
+        if (![myClass shouldSync] || (![PFUser currentUser] && ![myClass readOnly]))
             continue;
         
         [childrenToo addObject:obj];
