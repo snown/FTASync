@@ -605,6 +605,14 @@
 				if (localGeoPoint) {
 					[localGeoPoint MR_deleteEntity];
 				}
+			} else {
+				if (!localGeoPoint) {
+					localGeoPoint = [FTAGeoPoint MR_createEntity];
+					[self setValue:localGeoPoint forKey:relationship];
+					[localGeoPoint setValue:self forKey:FTAGeoPointRelationships.parseObject];
+				}
+				
+				[localGeoPoint updateWithPFGeoPoint:remoteGeoPoint];
 			}
 		}
         else {
