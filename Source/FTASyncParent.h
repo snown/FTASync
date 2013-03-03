@@ -38,9 +38,9 @@
 + (void)FTA_deleteObjectsForClass:(NSEntityDescription *)entityDesc withRemoteObjects:(NSArray *)parseObjects;
 
 // Sync Options
++ (BOOL)shouldSync;
 - (BOOL)usePFRelationForRelationship:(NSRelationshipDescription *)relationship;
 - (NSDictionary *)attributesForParseSync;
 - (NSDictionary *)relationshipsForParseSync;
-+ (BOOL)shouldSync;
 
 @end

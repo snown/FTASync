@@ -381,6 +381,14 @@
             
             continue;
         }
+		
+		if ([(NSAttributeDescription *)[attributes objectForKey:attribute] attributeType] == NSBooleanAttributeType) {
+			if (value && [value isKindOfClass:[NSNumber class]]) {
+				[parseObject setObject:[NSNumber numberWithBool:[(NSNumber *)value boolValue]] forKey:attribute];
+				
+				continue;
+			}
+		}
         
         if (value != nil && ![attribute isEqualToString:@"createdHere"] && ![attribute isEqualToString:@"updatedAt"] && ![attribute isEqualToString:@"syncStatus"] && ![attribute isEqualToString:@"objectId"]) {
             [parseObject setObject:value forKey:attribute];
