@@ -494,7 +494,8 @@
     NSDictionary *relationships = [self relationshipsForParseSync];
     
     //Set all the attributes
-    if (self.syncStatusValue != 1) { //Local changes take priority
+    if (YES /*self.syncStatusValue != 1*/) { //Local changes take priority
+//	if (self.syncStatusValue != 1) { //Local changes take priority
         for (NSString *attribute in attributes) {
             NSString *className = [[attributes valueForKey:attribute] attributeValueClassName];
             
