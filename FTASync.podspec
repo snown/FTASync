@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'Custom', :file => 'LICENSE.txt' }
   s.author       = { "Andy Bennett" => "andy@steamshift.net" }
 
-  s.source       = { :git => "https://github.com/akbsteam/FTASync.git" }
+  s.source       = { :git => "https://github.com/snown/FTASync.git" }
   s.platform     = :ios
 
   s.source_files = 'Source', 'Source/*.{h,m}'
