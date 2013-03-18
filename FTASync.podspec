@@ -21,4 +21,5 @@ Pod::Spec.new do |s|
   s.source_files = 'Source', 'Source/*.{h,m}'
   s.dependency 'Parse', '>= 1.1.25'
   s.dependency 'MagicalRecord', '>= 2.1.0'
+  s.dependency 'NPReachability', '>= 0.1.0'
 end
