@@ -626,7 +626,10 @@
 		}
         else {
             PFObject *relatedRemoteObject = [parseObject objectForKey:relationship];
-            
+            if (relatedRemoteObject && [relatedRemoteObject isKindOfClass:[NSNull class]]) {
+				relatedRemoteObject = nil;
+			}
+			
             FTASyncParent *localRelatedObject = [FTASyncParent FTA_localObjectForClass:destEntity WithRemoteId:relatedRemoteObject.objectId];
             FTASyncParent *currentLocalRelatedObject = [self valueForKey:relationship];
             
