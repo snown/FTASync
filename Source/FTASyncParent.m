@@ -501,7 +501,12 @@
             
             if ([className isEqualToString:@"NSData"]) {
                 PFFile* remoteFile = [parseObject objectForKey:attribute];
-                [self setValue:[NSData dataWithData:[remoteFile getData]] forKey:attribute];
+				id data = nil;
+				if ([remoteFile isKindOfClass:[PFFile class]]) {
+					data = [NSData dataWithData:[remoteFile getData]];
+				}
+				
+                [self setValue:data forKey:attribute];
                 continue;
             }
             
