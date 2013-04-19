@@ -497,10 +497,11 @@
     if (YES /*self.syncStatusValue != 1*/) { //Local changes take priority
 //	if (self.syncStatusValue != 1) { //Local changes take priority
         for (NSString *attribute in attributes) {
+			id parseObjectValue = [parseObject objectForKey:attribute];
             NSString *className = [[attributes valueForKey:attribute] attributeValueClassName];
             
             if ([className isEqualToString:@"NSData"]) {
-                PFFile* remoteFile = [parseObject objectForKey:attribute];
+                PFFile* remoteFile = parseObjectValue;
 				id data = nil;
 				if ([remoteFile isKindOfClass:[PFFile class]]) {
 					data = [NSData dataWithData:[remoteFile getData]];
@@ -512,7 +513,10 @@
             
             if (![attribute isEqualToString:@"createdHere"] && ![attribute isEqualToString:@"updatedAt"] && ![attribute isEqualToString:@"syncStatus"] && ![attribute isEqualToString:@"objectId"]) {
                 //TODO: Catch NSUndefinedKeyException if key does not exist on PFObject
-                [self setValue:[parseObject valueForKey:attribute] forKey:attribute];
+				if ([parseObjectValue isKindOfClass:[NSNull class]]) {
+					parseObjectValue = nil;
+				}
+                [self setValue:parseObjectValue forKey:attribute];
             }
         }
     }
