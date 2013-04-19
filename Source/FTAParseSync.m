@@ -67,7 +67,10 @@
 }
 
 - (NSArray *)getObjectsOfClass:(NSString *)className updatedSince:(NSDate *)lastUpdate {
-	return [self getObjectsOfClass:className updatedSince:lastUpdate skip:0];
+	// An attempt to make sure that there are objects to check against in a future operation
+	NSString *aClassName = className;
+	NSDate *aDate = lastUpdate;
+	return [self getObjectsOfClass:aClassName updatedSince:aDate skip:0];
 }
 
 - (BOOL)putUpdatedObjects:(NSArray *)updatedObjects forClass:(NSEntityDescription *)entityDesc error:(NSError **)error {
